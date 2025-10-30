@@ -1,7 +1,6 @@
-/**
 package com.rda.concesionaria.dto;
 
-import com.rda.concesionaria.entity.Auto;
+import com.rda.concesionaria.entity.Auto; // ✅ Asegurar que importa la entidad correcta
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +27,7 @@ public class AutoDTO {
     private String imagen3;
     private String imagen4;
     
-    // Constructor desde entidad
+    // ✅ Este método debe usar la entidad Auto del package correcto
     public static AutoDTO fromEntity(Auto auto) {
         return AutoDTO.builder()
                 .id(auto.getId())
@@ -46,4 +45,3 @@ public class AutoDTO {
                 .build();
     }
 }
- **/

@@ -1,8 +1,6 @@
-/**
 package com.rda.concesionaria.service;
 
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Auto;
-import com.rda.concesionaria.dto.AutoCatalogoDTO;
+import com.rda.concesionaria.entity.Auto;
 import com.rda.concesionaria.dto.AutoDTO;
 import com.rda.concesionaria.repository.AutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,66 +15,59 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class AutoService {
     
-    private final AutoRepository autoRepository;
+    private final AutoRepository autoRepository; // ✅ CORREGIDO
 
-    public AutoService(AutoRepository autoRepository) {
-        this.autoRepository = autoRepository;
-    }
-
-
-    public List<AutoCatalogoDTO> obtenerTodosParaCatalogo() {
+    public List<AutoDTO> obtenerTodosParaCatalogo() {
         return autoRepository.findAll()
                 .stream()
-                .map(AutoCatalogoDTO::fromEntity)
+                .map(AutoDTO::fromEntity) // ✅ Usar AutoDTO directamente
                 .collect(Collectors.toList());
     }
-    
 
-    public List<AutoCatalogoDTO> filtrarPorTipo(String tipo) {
+    public List<AutoDTO> filtrarPorTipo(String tipo) {
         try {
             Auto.TipoAuto tipoAuto = Auto.TipoAuto.valueOf(tipo.toUpperCase());
-            return autoRepository.findByTipo(TipoAuto)
+            return autoRepository.findByTipo(tipoAuto) // ✅ parámetro corregido
                     .stream()
-                    .map(AutoCatalogoDTO::fromEntity)
+                    .map(AutoDTO::fromEntity) // ✅ Usar AutoDTO
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Tipo de auto inválido: " + tipo);
         }
     }
-    
 
-    public List<AutoCatalogoDTO> filtrarPorDisponibilidad(Boolean disponible) {
+    public List<AutoDTO> filtrarPorDisponibilidad(Boolean disponible) {
         return autoRepository.findByDisponible(disponible)
                 .stream()
-                .map(AutoCatalogoDTO::fromEntity)
+                .map(AutoDTO::fromEntity)
                 .collect(Collectors.toList());
     }
-    
 
-    public List<AutoCatalogoDTO> filtrarPorTipoYDisponibilidad(String tipo, Boolean disponible) {
+    public List<AutoDTO> filtrarPorTipoYDisponibilidad(String tipo, Boolean disponible) {
         try {
             Auto.TipoAuto tipoAuto = Auto.TipoAuto.valueOf(tipo.toUpperCase());
             return autoRepository.findByTipoAndDisponible(tipoAuto, disponible)
                     .stream()
-                    .map(AutoCatalogoDTO::fromEntity)
+                    .map(AutoDTO::fromEntity) // ✅ Usar AutoDTO
                     .collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Tipo de auto inválido: " + tipo);
         }
     }
-    
 
-    public List<AutoCatalogoDTO> buscarPorMarcaOModelo(String search) {
+    public List<AutoDTO> buscarPorMarcaOModelo(String search) {
         if (search == null || search.trim().isEmpty()) {
             return obtenerTodosParaCatalogo();
         }
         
         return autoRepository.searchByMarcaOrModelo(search)
                 .stream()
-                .map(AutoCatalogoDTO::fromEntity)
+                .map(AutoDTO::fromEntity) // ✅ Usar AutoDTO
                 .collect(Collectors.toList());
     }
-    
+
+    // ... resto de métodos permanecen igual
+}
 
     public AutoDTO obtenerDetallePorId(Integer id) {
         Auto auto = autoRepository.findById(id)
@@ -145,4 +136,3 @@ public class AutoService {
         auto.setImagen4(dto.getImagen4());
     }
 }
- **/

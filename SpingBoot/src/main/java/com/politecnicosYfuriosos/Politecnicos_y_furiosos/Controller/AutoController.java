@@ -1,8 +1,6 @@
 
-/**
-        package com.rda.concesionaria.controller;
 
-import com.rda.concesionaria.dto.AutoCatalogoDTO;
+package com.rda.concesionaria.controller;
 import com.rda.concesionaria.dto.AutoDTO;
 import com.rda.concesionaria.service.AutoService;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +16,16 @@ import java.util.List;
 @CrossOrigin(origins = "*") // Configurar según tus necesidades
 public class AutoController {
     
-    private final AutoService autoService;
+    private final Auto autoService;
     
 
     @GetMapping("/catalogo")
-    public ResponseEntity<List<AutoCatalogoDTO>> obtenerCatalogo(
+    public ResponseEntity<List<AutoDTO>> obtenerCatalogo(
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) Boolean disponible,
             @RequestParam(required = false) String search) {
         
-        List<AutoCatalogoDTO> autos;
+        List<AutoDTO> autos;
         
         // Si hay búsqueda, priorizar eso
         if (search != null && !search.trim().isEmpty()) {
@@ -55,15 +53,15 @@ public class AutoController {
     
 
     @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<List<AutoCatalogoDTO>> filtrarPorTipo(@PathVariable String tipo) {
-        List<AutoCatalogoDTO> autos = autoService.filtrarPorTipo(tipo);
+    public ResponseEntity<List<AutoDTO>> filtrarPorTipo(@PathVariable String tipo) {
+        List<AutoDTO> autos = autoService.filtrarPorTipo(tipo);
         return ResponseEntity.ok(autos);
     }
     
 
     @GetMapping("/disponibles")
-    public ResponseEntity<List<AutoCatalogoDTO>> obtenerDisponibles() {
-        List<AutoCatalogoDTO> autos = autoService.filtrarPorDisponibilidad(true);
+    public ResponseEntity<List<AutoDTO>> obtenerDisponibles() {
+        List<AutoDTO> autos = autoService.filtrarPorDisponibilidad(true);
         return ResponseEntity.ok(autos);
     }
     
@@ -90,9 +88,9 @@ public class AutoController {
     
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<AutoCatalogoDTO>> buscar(
+    public ResponseEntity<List<AutoDTO>> buscar(
             @RequestParam String q) {
-        List<AutoCatalogoDTO> autos = autoService.buscarPorMarcaOModelo(q);
+        List<AutoDTO> autos = autoService.buscarPorMarcaOModelo(q);
         return ResponseEntity.ok(autos);
     }
     
@@ -119,4 +117,3 @@ public class AutoController {
         return ResponseEntity.noContent().build();
     }
 }
- **/

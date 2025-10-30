@@ -34,7 +34,7 @@
         <h1 class="hero-title">Catálogo de autos</h1>
         <p class="hero-subtitle">Lujo, tecnología y exclusividad.</p>
         <div class="search-bar mx-auto">
-            <input type="text" class="form-control" placeholder="Buscar modelo">
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar por marca o modelo...">
         </div>
     </div>
 </section>
@@ -44,21 +44,21 @@
     <div class="container">
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="category-card suv">
+                <div class="category-card suv" data-tipo="SUV">
                     <div class="category-icon">
                     </div>
                     <h5 class="category-title">SUV</h5>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="category-card coupe">
+                <div class="category-card coupe" data-tipo="COUPE">
                     <div class="category-icon">
                     </div>
                     <h5 class="category-title">Coupé</h5>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="category-card disponible">
+                <div class="category-card disponible" data-disponible="true">
                     <div class="category-icon">
                     </div>
                     <h5 class="category-title">Disponible</h5>
@@ -71,23 +71,8 @@
 <!-- Grid Section -->
 <section class="grid-section">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="grid-card img1">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="grid-card img2">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="grid-card img3">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="grid-card img4"> 
-                </div>
-            </div>
+        <div class="row g-4" id="autosGrid">
+            <!-- Los autos se cargarán dinámicamente aquí -->
         </div>
     </div>
 </section>
@@ -97,17 +82,26 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto">
-                <div class="featured-card">
-                    <div class="featured-content">
-                        <h6 class="featured-label">Ferrari Roma (Último lanzamiento)</h6>
-                        <p class="featured-description">
-                            Motor V8 turbo, Interior de lujo con acabados en cuero,
-                            Sistema de infoentretenimiento avanzado CX-V: 920.
-                            Tracción trasera, frenos de alto desempeño con pinzas Brembo.
-                            Sistema de suspensión avanzada para una experiencia de manejo superior.
-                        </p>
+                <div class="featured-card" id="ultimoLanzamientoCard">
+                    <div class="featured-content text-center">
+                        <div class="loading-text">
+                            <p>Cargando último lanzamiento...</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Todos los Autos Section -->
+<section class="all-cars-section">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Todos los Autos</h2>
+        
+        <div class="cars-grid" id="carsGrid">
+            <div class="loading-text text-center">
+                <p>Cargando autos...</p>
             </div>
         </div>
     </div>
@@ -123,44 +117,342 @@
 </section>
 
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer-premium">
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h6 class="footer-brand">RDA</h6>
-                <ul class="footer-links">
-                    <li><a href="#contacto">Contacto</a></li>
-                    <li><a href="#soporte">Soporte 24/7</a></li>
-                    <li><a href="#preguntas">Preguntas Frecuentes</a></li>
-                </ul>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <h6 class="footer-heading">Ubicaciones</h6>
-                <ul class="footer-links">
-                    <li><a href="#info">info@rdaconcesionaria@hotmail.com</a></li>
-                    <li><a href="#cuotas">Cuotas</a></li>
-                    <li><a href="#reserva">Reserva</a></li>
-                </ul>
-            </div>
+      <div class="footer-content">
+        <!-- Sección 1: Marca -->
+        <div class="footer-section">
+          <div class="footer-brand"><h4>P&F</h4></div>
+          <p class="footer-tagline">Garage inteligente y autos de lujo</p>
+          <p style="color: #666; font-size: 0.85rem; line-height: 1.6;">
+            Experimentá la excelencia en cada detalle. Desde estacionamiento premium hasta la flota más exclusiva de autos de alta gama.
+          </p>
         </div>
+
+        <!-- Sección 2: Servicios -->
+        <div class="footer-section">
+          <h4>Servicios</h4>
+          <ul>
+            <li><a href="#estacionar">Estacionamiento Inteligente</a></li>
+            <li><a href="#garage">Reservar Auto</a></li>
+            <li><a href="#servicios">Mantenimiento Premium</a></li>
+            <li><a href="#">Detailing & Personalización</a></li>
+            <li><a href="#">Membresías Exclusivas</a></li>
+          </ul>
+        </div>
+
+        <!-- Sección 3: Empresa -->
+        <div class="footer-section">
+          <h4>Empresa</h4>
+          <ul>
+            <li><a href="#">Sobre Nosotros</a></li>
+            <li><a href="#">Nuestra Flota</a></li>
+            <li><a href="#">Marcas</a></li>
+            <li><a href="#">Eventos & Experiencias</a></li>
+            <li><a href="#">Contacto</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 POLITÉCNICOS Y FURIOSOS. Todos los derechos reservados.</p>
+        <div class="footer-legal">
+          <a href="#">Términos y Condiciones</a>
+          <a href="#">Política de Privacidad</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
     </div>
-</footer>
+  </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const user = JSON.parse(sessionStorage.getItem("cliente")); 
-    const perfilBtn = document.getElementById("perfilBtn");
+// Variables globales
+let todosLosAutos = [];
+let filtroActual = {};
 
-    if(user){
-      // ✅ Usuario logueado → Mostrar nombre y apellido (sin emoji)
-          perfilBtn.textContent = `${user.nombre} ${user.apellido}`;
-      perfilBtn.classList.remove("btn-outline-light");
-      perfilBtn.classList.add("btn-success");
-      perfilBtn.style.whiteSpace = "nowrap";
-      perfilBtn.removeAttribute("data-bs-toggle");
-      perfilBtn.removeAttribute("data-bs-target");
-      perfilBtn.onclick = () => window.location.href = "../Perfil/perfil.html";
+// Función para cargar el último lanzamiento
+async function cargarUltimoLanzamiento() {
+    try {
+        const response = await fetch('http://localhost:8080/api/autos/ultimo-lanzamiento');
+        const ultimoLanzamiento = await response.json();
+        
+        mostrarUltimoLanzamiento(ultimoLanzamiento);
+    } catch (error) {
+        console.error('Error cargando último lanzamiento:', error);
+        document.getElementById('ultimoLanzamientoCard').innerHTML = `
+            <div class="featured-content text-center">
+                <p class="text-warning">Error al cargar el último lanzamiento</p>
+            </div>
+        `;
     }
+}
+
+// Función para mostrar el último lanzamiento
+function mostrarUltimoLanzamiento(auto) {
+    const featuredCard = document.getElementById('ultimoLanzamientoCard');
+    
+    featuredCard.innerHTML = `
+        <div class="featured-content">
+            <h6 class="featured-label">${auto.marca} ${auto.modelo} (Último lanzamiento)</h6>
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    ${auto.imagen1 ? `
+                        <img src="${auto.imagen1}" alt="${auto.marca} ${auto.modelo}" 
+                             class="img-fluid rounded featured-image">
+                    ` : `
+                        <div class="no-featured-image rounded">Sin imagen</div>
+                    `}
+                </div>
+                <div class="col-md-8">
+                    <p class="featured-description">
+                        ${auto.descripcion || 'Descripción no disponible.'}
+                    </p>
+                    <div class="featured-details mt-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>Año:</strong> ${auto.anio}
+                            </div>
+                            <div class="col-6">
+                                <strong>Precio:</strong> $${auto.precioPorDia}/día
+                            </div>
+                            <div class="col-6">
+                                <strong>Tipo:</strong> ${auto.tipo || 'N/A'}
+                            </div>
+                            <div class="col-6">
+                                <strong>Estado:</strong> 
+                                ${auto.disponible ? 
+                                    '<span class="text-success">Disponible</span>' : 
+                                    '<span class="text-warning">No disponible</span>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="featured-actions mt-4">
+                        <button class="btn btn-warning me-2" onclick="reservarAuto(${auto.id})" 
+                            ${!auto.disponible ? 'disabled' : ''}>
+                            ${auto.disponible ? 'Reservar ahora' : 'No disponible'}
+                        </button>
+                        <button class="btn btn-outline-light" onclick="verDetalleAuto(${auto.id})">
+                            Ver detalles
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Función principal para cargar autos con filtros
+async function cargarAutos(filtros = {}) {
+    try {
+        const params = new URLSearchParams();
+        if (filtros.tipo) params.append('tipo', filtros.tipo);
+        if (filtros.disponible !== undefined) params.append('disponible', filtros.disponible);
+        if (filtros.search) params.append('search', filtros.search);
+        
+        const response = await fetch(`http://localhost:8080/api/autos/catalogo?${params}`);
+        const autos = await response.json();
+        
+        // Guardar todos los autos para búsquedas locales si es necesario
+        if (Object.keys(filtros).length === 0) {
+            todosLosAutos = autos;
+        }
+        
+        // Actualizar ambas secciones
+        mostrarAutosEnGrid(autos);
+        mostrarTodosLosAutos(autos);
+        
+    } catch (error) {
+        console.error('Error cargando catálogo:', error);
+        document.getElementById('autosGrid').innerHTML = 
+            '<div class="col-12 text-center"><p class="text-warning">Error al cargar los autos</p></div>';
+        document.getElementById('carsGrid').innerHTML = 
+            '<div class="error-text text-center"><p>Error al cargar los autos</p></div>';
+    }
+}
+
+// Función para buscar autos
+function buscarAutos() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    
+    if (searchTerm) {
+        // Aplicar filtro de búsqueda
+        filtroActual.search = searchTerm;
+        cargarAutos(filtroActual);
+    } else {
+        // Si no hay término de búsqueda, quitar el filtro
+        delete filtroActual.search;
+        cargarAutos(filtroActual);
+    }
+}
+
+// Función para limpiar búsqueda
+function limpiarBusqueda() {
+    document.getElementById('searchInput').value = '';
+    delete filtroActual.search;
+    cargarAutos(filtroActual);
+}
+
+// Función para mostrar autos en el grid principal
+function mostrarAutosEnGrid(autos) {
+    const gridSection = document.getElementById('autosGrid');
+    
+    if (!autos || autos.length === 0) {
+        gridSection.innerHTML = `
+            <div class="col-12 text-center">
+                <p class="text-muted">No se encontraron autos</p>
+                <button class="btn btn-outline-warning btn-sm" onclick="limpiarBusqueda()">
+                    Mostrar todos los autos
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    // Mostrar máximo 4 autos en el grid principal
+    const autosParaMostrar = autos.slice(0, 4);
+    
+    gridSection.innerHTML = autosParaMostrar.map(auto => `
+        <div class="col-md-6">
+            <div class="grid-card" style="background-image: url('${auto.imagen1 || ''}')">
+                <div class="card-content text-white p-3">
+                    <h5>${auto.marca} ${auto.modelo}</h5>
+                    <p>${auto.anio} • $${auto.precioPorDia}/día</p>
+                    <small class="badge bg-dark">${auto.tipo || 'N/A'}</small>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Función para mostrar todos los autos en la sección inferior
+function mostrarTodosLosAutos(autos) {
+    const carsGrid = document.getElementById('carsGrid');
+    
+    if (!autos || autos.length === 0) {
+        carsGrid.innerHTML = `
+            <div class="no-cars-text text-center">
+                <p>No se encontraron autos</p>
+                ${filtroActual.search ? `
+                    <button class="btn btn-outline-warning btn-sm" onclick="limpiarBusqueda()">
+                        Mostrar todos los autos
+                    </button>
+                ` : ''}
+            </div>
+        `;
+        return;
+    }
+    
+    carsGrid.innerHTML = autos.map(auto => `
+        <div class="car-card" data-id="${auto.id}">
+            <div class="car-header">
+                <h4 class="car-title">${auto.marca} ${auto.modelo}</h4>
+                <span class="car-year">${auto.anio}</span>
+            </div>
+            
+            <div class="car-image">
+                ${auto.imagen1 ? 
+                    `<img src="${auto.imagen1}" alt="${auto.marca} ${auto.modelo}" class="car-img">` : 
+                    '<div class="no-image">Sin imagen</div>'
+                }
+            </div>
+            
+            <div class="car-details">
+                <div class="car-price">
+                    <strong>$${auto.precioPorDia}/día</strong>
+                </div>
+                <div class="car-type">
+                    <span class="badge ${auto.tipo ? auto.tipo.toLowerCase() : 'default'}">${auto.tipo || 'N/A'}</span>
+                </div>
+                <div class="car-availability">
+                    ${auto.disponible ? 
+                        '<span class="available">✅ Disponible</span>' : 
+                        '<span class="not-available">❌ No disponible</span>'
+                    }
+                </div>
+            </div>
+            
+            ${auto.descripcion ? `
+                <div class="car-description">
+                    <p class="car-tag">${auto.descripcion}</p>
+                </div>
+            ` : ''}
+            
+            <div class="car-actions">
+                <button class="btn btn-reserve" onclick="reservarAuto(${auto.id})" 
+                    ${!auto.disponible ? 'disabled' : ''}>
+                    ${auto.disponible ? 'Reservar ahora' : 'No disponible'}
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Función para reservar auto
+function reservarAuto(autoId) {
+    // Redirigir a página de reserva o mostrar modal
+    alert(`Reservando auto ID: ${autoId}`);
+    // window.location.href = `/reserva.html?autoId=${autoId}`;
+}
+
+// Función para ver detalle del auto
+function verDetalleAuto(autoId) {
+    // Redirigir a página de detalle
+    alert(`Viendo detalle del auto ID: ${autoId}`);
+    // window.location.href = `/detalle-auto.html?autoId=${autoId}`;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar todos los autos al inicio
+    cargarAutos();
+    
+    // Cargar último lanzamiento
+    cargarUltimoLanzamiento();
+    
+    // Buscar al presionar Enter
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            buscarAutos();
+        }
+    });
+    
+    // Filtros por categoría
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const tipo = this.getAttribute('data-tipo');
+            const disponible = this.getAttribute('data-disponible');
+            
+            // Limpiar búsqueda cuando se usa filtro de categoría
+            document.getElementById('searchInput').value = '';
+            
+            if (tipo) {
+                filtroActual.tipo = tipo;
+                delete filtroActual.disponible;
+            } else if (disponible) {
+                filtroActual.disponible = true;
+                delete filtroActual.tipo;
+            }
+            
+            cargarAutos(filtroActual);
+        });
+    });
+});
+
+// Script para el perfil de usuario
+const user = JSON.parse(sessionStorage.getItem("cliente")); 
+const perfilBtn = document.getElementById("perfilBtn");
+
+if(user){
+    perfilBtn.textContent = `${user.nombre} ${user.apellido}`;
+    perfilBtn.classList.remove("btn-outline-light");
+    perfilBtn.classList.add("btn-success");
+    perfilBtn.style.whiteSpace = "nowrap";
+    perfilBtn.removeAttribute("data-bs-toggle");
+    perfilBtn.removeAttribute("data-bs-target");
+    perfilBtn.onclick = () => window.location.href = "../Perfil/perfil.html";
+}
 </script>
 
 </body>
