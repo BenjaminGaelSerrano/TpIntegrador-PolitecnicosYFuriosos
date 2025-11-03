@@ -1,4 +1,4 @@
-package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository;
+package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo;
 
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;

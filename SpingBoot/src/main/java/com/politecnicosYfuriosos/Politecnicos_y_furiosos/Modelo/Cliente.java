@@ -1,3 +1,4 @@
+
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 import jakarta.persistence.*;
 import java.util.List;
@@ -20,11 +21,7 @@ public class Cliente {
     private String pais;
     private MembershipPlan membresia;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Reserva> reservas;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Resenia> resenias;
 
     public Integer getId() {
         return id;
@@ -106,6 +103,7 @@ public class Cliente {
         this.contrasena = contrasena;
     }
 
+    /*
     public List<Reserva> getReservas() {
         return reservas;
     }
@@ -114,13 +112,9 @@ public class Cliente {
         this.reservas = reservas;
     }
 
-    public List<Resenia> getResenias() {
-        return resenias;
-    }
+     */
 
-    public void setResenias(List<Resenia> resenias) {
-        this.resenias = resenias;
-    }
+
 
     public void setMembresia(MembershipPlan membresia){
         this.membresia=membresia;
@@ -129,4 +123,6 @@ public class Cliente {
         return membresia;
     }
 }
+
+
 
