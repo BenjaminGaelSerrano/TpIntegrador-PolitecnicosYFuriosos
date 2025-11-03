@@ -542,11 +542,17 @@ function sendToDatabase(reservationData) {
     });
 }
 
-// Función para obtener ID del cliente (TEMPORAL)
+// Función para obtener el ID del cliente 
 function obtenerClienteId() {
-    // TEMPORAL: Usar ID 1 para pruebas
-    // En el futuro, esto vendrá de tu sistema de login
-    return 1;
+    const user = JSON.parse(sessionStorage.getItem("cliente"));
+    
+    if (!user || !user.id) {
+        alert('❌ Debes iniciar sesión para hacer una reserva');
+        throw new Error('Usuario no autenticado');
+    }
+    
+    console.log('👤 Cliente autenticado:', user.nombre, user.apellido, 'ID:', user.id);
+    return user.id;
 }
 
 // Función para limpiar selección

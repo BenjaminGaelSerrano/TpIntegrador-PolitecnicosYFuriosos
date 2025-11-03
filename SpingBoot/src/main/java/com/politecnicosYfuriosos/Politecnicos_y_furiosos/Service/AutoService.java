@@ -1,4 +1,4 @@
-package com.rda.concesionaria.service;
+/*package com.rda.concesionaria.service;
 
 import com.rda.concesionaria.entity.Auto;
 import com.rda.concesionaria.dto.AutoDTO;
@@ -136,3 +136,4 @@ public class AutoService {
         auto.setImagen4(dto.getImagen4());
     }
 }
+*/

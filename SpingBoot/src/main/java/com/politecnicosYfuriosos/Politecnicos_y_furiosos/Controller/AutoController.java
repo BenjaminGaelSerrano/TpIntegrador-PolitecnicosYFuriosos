@@ -1,5 +1,5 @@
 
-
+/*
 package com.rda.concesionaria.controller;
 import com.rda.concesionaria.dto.AutoDTO;
 import com.rda.concesionaria.service.AutoService;
@@ -117,3 +117,5 @@ public class AutoController {
         return ResponseEntity.noContent().build();
     }
 }
+
+ */

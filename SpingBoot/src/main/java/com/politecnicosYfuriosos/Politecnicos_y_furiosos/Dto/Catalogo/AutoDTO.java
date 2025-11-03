@@ -1,3 +1,4 @@
+/*
 package com.rda.concesionaria.dto;
 
 import com.rda.concesionaria.entity.Auto; // ✅ Asegurar que importa la entidad correcta
@@ -45,3 +46,5 @@ public class AutoDTO {
                 .build();
     }
 }
+
+ */
