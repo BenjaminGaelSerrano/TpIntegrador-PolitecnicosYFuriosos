@@ -34,7 +34,15 @@
         <h1 class="hero-title">Catálogo de autos</h1>
         <p class="hero-subtitle">Lujo, tecnología y exclusividad.</p>
         <div class="search-bar mx-auto">
-            <input type="text" class="form-control" id="searchInput" placeholder="Buscar por marca o modelo...">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar por marca o modelo...">
+                <button class="btn btn-warning" type="button" onclick="buscarAutos()">
+                    🔍 Buscar
+                </button>
+                <button class="btn btn-outline-secondary" type="button" onclick="limpiarBusqueda()" id="clearSearchBtn" style="display: none;">
+                    ✕
+                </button>
+            </div>
         </div>
     </div>
 </section>
@@ -43,25 +51,41 @@
 <section class="categories-section">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="category-card suv" data-tipo="SUV">
                     <div class="category-icon">
                     </div>
                     <h5 class="category-title">SUV</h5>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="category-card coupe" data-tipo="COUPE">
                     <div class="category-icon">
                     </div>
                     <h5 class="category-title">Coupé</h5>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="category-card deportivo" data-tipo="DEPORTIVO">
+                    <div class="category-icon">
+                    </div>
+                    <h5 class="category-title">Deportivo</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="category-card disponible" data-disponible="true">
                     <div class="category-icon">
                     </div>
                     <h5 class="category-title">Disponible</h5>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filtros activos -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div id="filtrosActivos" class="d-flex flex-wrap gap-2" style="display: none !important;">
+                    <!-- Los filtros activos se mostrarán aquí -->
                 </div>
             </div>
         </div>
@@ -97,7 +121,12 @@
 <!-- Todos los Autos Section -->
 <section class="all-cars-section">
     <div class="container">
-        <h2 class="section-title text-center mb-5">Todos los Autos</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title mb-0">Todos los Autos</h2>
+            <div class="results-info">
+                <span id="contadorResultados" class="text-muted"></span>
+            </div>
+        </div>
         
         <div class="cars-grid" id="carsGrid">
             <div class="loading-text text-center">
@@ -246,6 +275,8 @@ function mostrarUltimoLanzamiento(auto) {
 // Función principal para cargar autos con filtros
 async function cargarAutos(filtros = {}) {
     try {
+        mostrarLoading();
+        
         const params = new URLSearchParams();
         if (filtros.tipo) params.append('tipo', filtros.tipo);
         if (filtros.disponible !== undefined) params.append('disponible', filtros.disponible);
@@ -262,36 +293,153 @@ async function cargarAutos(filtros = {}) {
         // Actualizar ambas secciones
         mostrarAutosEnGrid(autos);
         mostrarTodosLosAutos(autos);
+        actualizarFiltrosActivos();
+        actualizarContadorResultados(autos.length);
         
     } catch (error) {
         console.error('Error cargando catálogo:', error);
-        document.getElementById('autosGrid').innerHTML = 
-            '<div class="col-12 text-center"><p class="text-warning">Error al cargar los autos</p></div>';
-        document.getElementById('carsGrid').innerHTML = 
-            '<div class="error-text text-center"><p>Error al cargar los autos</p></div>';
+        mostrarError();
     }
+}
+
+// Función para mostrar estado de carga
+function mostrarLoading() {
+    document.getElementById('autosGrid').innerHTML = `
+        <div class="col-12 text-center">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-muted mt-2">Cargando autos...</p>
+        </div>
+    `;
+    
+    document.getElementById('carsGrid').innerHTML = `
+        <div class="loading-text text-center">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-muted mt-2">Cargando autos...</p>
+        </div>
+    `;
+}
+
+// Función para mostrar error
+function mostrarError() {
+    document.getElementById('autosGrid').innerHTML = 
+        '<div class="col-12 text-center"><p class="text-warning">Error al cargar los autos</p></div>';
+    document.getElementById('carsGrid').innerHTML = 
+        '<div class="error-text text-center"><p>Error al cargar los autos</p></div>';
 }
 
 // Función para buscar autos
 function buscarAutos() {
     const searchTerm = document.getElementById('searchInput').value.trim();
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
     
     if (searchTerm) {
         // Aplicar filtro de búsqueda
         filtroActual.search = searchTerm;
-        cargarAutos(filtroActual);
+        clearSearchBtn.style.display = 'block';
     } else {
         // Si no hay término de búsqueda, quitar el filtro
         delete filtroActual.search;
-        cargarAutos(filtroActual);
+        clearSearchBtn.style.display = 'none';
     }
+    
+    cargarAutos(filtroActual);
 }
 
 // Función para limpiar búsqueda
 function limpiarBusqueda() {
     document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
     delete filtroActual.search;
     cargarAutos(filtroActual);
+}
+
+// Función para aplicar filtro por categoría
+function aplicarFiltroCategoria(tipo, disponible) {
+    // Limpiar búsqueda cuando se usa filtro de categoría
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    
+    if (tipo) {
+        filtroActual.tipo = tipo;
+        delete filtroActual.disponible;
+    } else if (disponible) {
+        filtroActual.disponible = true;
+        delete filtroActual.tipo;
+    }
+    
+    cargarAutos(filtroActual);
+}
+
+// Función para quitar filtro
+function quitarFiltro(clave) {
+    delete filtroActual[clave];
+    cargarAutos(filtroActual);
+}
+
+// Función para limpiar todos los filtros
+function limpiarTodosLosFiltros() {
+    filtroActual = {};
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    cargarAutos();
+}
+
+// Función para actualizar filtros activos
+function actualizarFiltrosActivos() {
+    const filtrosActivos = document.getElementById('filtrosActivos');
+    const filtros = Object.keys(filtroActual);
+    
+    if (filtros.length === 0) {
+        filtrosActivos.style.display = 'none';
+        return;
+    }
+    
+    filtrosActivos.style.display = 'flex';
+    filtrosActivos.innerHTML = `
+        <span class="text-muted">Filtros activos:</span>
+        ${filtros.map(clave => {
+            let valor = filtroActual[clave];
+            let texto = '';
+            
+            if (clave === 'tipo') {
+                texto = `Tipo: ${valor}`;
+            } else if (clave === 'disponible') {
+                texto = 'Solo disponibles';
+            } else if (clave === 'search') {
+                texto = `Búsqueda: "${valor}"`;
+            }
+            
+            return `
+                <span class="badge bg-warning text-dark d-flex align-items-center">
+                    ${texto}
+                    <button type="button" class="btn-close btn-close-white ms-1" 
+                            onclick="quitarFiltro('${clave}')" 
+                            style="font-size: 0.7rem;"></button>
+                </span>
+            `;
+        }).join('')}
+        ${filtros.length > 1 ? `
+            <button class="btn btn-outline-warning btn-sm" onclick="limpiarTodosLosFiltros()">
+                Limpiar todos
+            </button>
+        ` : ''}
+    `;
+}
+
+// Función para actualizar contador de resultados
+function actualizarContadorResultados(cantidad) {
+    const contador = document.getElementById('contadorResultados');
+    const filtros = Object.keys(filtroActual);
+    
+    if (filtros.length === 0) {
+        contador.textContent = `${cantidad} autos encontrados`;
+    } else {
+        contador.textContent = `${cantidad} autos encontrados con los filtros aplicados`;
+    }
 }
 
 // Función para mostrar autos en el grid principal
@@ -302,9 +450,11 @@ function mostrarAutosEnGrid(autos) {
         gridSection.innerHTML = `
             <div class="col-12 text-center">
                 <p class="text-muted">No se encontraron autos</p>
-                <button class="btn btn-outline-warning btn-sm" onclick="limpiarBusqueda()">
-                    Mostrar todos los autos
-                </button>
+                ${Object.keys(filtroActual).length > 0 ? `
+                    <button class="btn btn-outline-warning btn-sm" onclick="limpiarTodosLosFiltros()">
+                        Mostrar todos los autos
+                    </button>
+                ` : ''}
             </div>
         `;
         return;
@@ -315,11 +465,12 @@ function mostrarAutosEnGrid(autos) {
     
     gridSection.innerHTML = autosParaMostrar.map(auto => `
         <div class="col-md-6">
-            <div class="grid-card" style="background-image: url('${auto.imagen1 || ''}')">
+            <div class="grid-card" style="background-image: url('${auto.imagen1 || ''}')" onclick="verDetalleAuto(${auto.id})">
                 <div class="card-content text-white p-3">
                     <h5>${auto.marca} ${auto.modelo}</h5>
                     <p>${auto.anio} • $${auto.precioPorDia}/día</p>
                     <small class="badge bg-dark">${auto.tipo || 'N/A'}</small>
+                    ${auto.disponible ? '<span class="badge bg-success ms-1">Disponible</span>' : '<span class="badge bg-secondary ms-1">No disponible</span>'}
                 </div>
             </div>
         </div>
@@ -334,8 +485,8 @@ function mostrarTodosLosAutos(autos) {
         carsGrid.innerHTML = `
             <div class="no-cars-text text-center">
                 <p>No se encontraron autos</p>
-                ${filtroActual.search ? `
-                    <button class="btn btn-outline-warning btn-sm" onclick="limpiarBusqueda()">
+                ${Object.keys(filtroActual).length > 0 ? `
+                    <button class="btn btn-outline-warning btn-sm" onclick="limpiarTodosLosFiltros()">
                         Mostrar todos los autos
                     </button>
                 ` : ''}
@@ -424,18 +575,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const tipo = this.getAttribute('data-tipo');
             const disponible = this.getAttribute('data-disponible');
             
-            // Limpiar búsqueda cuando se usa filtro de categoría
-            document.getElementById('searchInput').value = '';
-            
-            if (tipo) {
-                filtroActual.tipo = tipo;
-                delete filtroActual.disponible;
-            } else if (disponible) {
-                filtroActual.disponible = true;
-                delete filtroActual.tipo;
-            }
-            
-            cargarAutos(filtroActual);
+            aplicarFiltroCategoria(tipo, disponible);
         });
     });
 });
