@@ -1,11 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 /*
 >>>>>>> 398a586581c20925353a9b5d89a94913b2a68e8c
+=======
+>>>>>>> 0d0222234f56ae6dab30c3487e06e700703edc8d
 package com.rda.concesionaria.repository;
 
-
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Auto;
+import com.rda.concesionaria.entity.Auto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -41,6 +43,7 @@ public interface AutoRepository extends JpaRepository<Auto, Integer> {
     @Query("SELECT a FROM Auto a ORDER BY a.anio DESC, a.id DESC")
     List<Auto> findDestacados();
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     // 🔹 Obtener último lanzamiento (sin usar LIMIT)
     Auto findFirstByOrderByAnioDescIdDesc(); // ✅ versión válida y eficiente
@@ -54,3 +57,9 @@ public interface AutoRepository extends JpaRepository<Auto, Integer> {
 
  */
 >>>>>>> 398a586581c20925353a9b5d89a94913b2a68e8c
+=======
+
+    // 🔹 Obtener último lanzamiento (sin usar LIMIT)
+    Auto findFirstByOrderByAnioDescIdDesc(); // ✅ versión válida y eficiente
+}
+>>>>>>> 0d0222234f56ae6dab30c3487e06e700703edc8d
