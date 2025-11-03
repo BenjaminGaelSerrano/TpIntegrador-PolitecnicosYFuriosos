@@ -3,7 +3,7 @@ package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Service;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Login.ClienteRegistroDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Login.Login_DTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Cliente;
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.ClienteRepository;
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +37,8 @@ public class Login_service {
             dto.setUsuario(cliente.getUsuario());
             dto.setPais(cliente.getPais());
             dto.setMembresia(cliente.getMembresia());
+
+            dto.setId(cliente.getId());
 
             return dto;
         } else {

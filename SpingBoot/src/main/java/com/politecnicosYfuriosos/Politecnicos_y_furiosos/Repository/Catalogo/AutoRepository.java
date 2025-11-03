@@ -1,7 +1,8 @@
 /*
 package com.rda.concesionaria.repository;
 
-import com.rda.concesionaria.entity.Auto;
+
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Auto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

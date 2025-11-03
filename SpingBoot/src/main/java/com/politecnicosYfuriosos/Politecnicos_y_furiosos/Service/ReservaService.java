@@ -7,7 +7,7 @@ import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Garage.EspacioReser
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Garage.ReservaRequestDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Garage.ReservaResponseDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.*;
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.ClienteRepository;
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo.ClienteRepository;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.garaje.LugarRepository;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.garaje.ReservaGarajeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
