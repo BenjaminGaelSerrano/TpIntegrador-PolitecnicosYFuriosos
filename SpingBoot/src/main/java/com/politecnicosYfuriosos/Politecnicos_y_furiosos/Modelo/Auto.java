@@ -1,6 +1,8 @@
+/*
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 
 
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Catalogo.AutoDTO;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -31,6 +33,54 @@ public class Auto {
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL)
     private List<Resenia> resenias;
+
+    public List<AutoDTO> buscarPorMarcaOModelo(String search) {
+        return List.of();
+    }
+
+    public Object getDisponible() {
+        return null;
+    }
+
+    public List<AutoDTO> filtrarPorTipoYDisponibilidad(String tipo, Boolean disponible) {
+        return List.of();
+    }
+
+    public List<AutoDTO> filtrarPorTipo(String tipo) {
+        return List.of();
+    }
+
+    public List<AutoDTO> filtrarPorDisponibilidad(Boolean disponible) {
+        return List.of();
+    }
+
+    public List<AutoDTO> obtenerTodosParaCatalogo() {
+        return List.of();
+    }
+
+    public List<AutoDTO> obtenerDestacados(int limit) {
+        return List.of();
+    }
+
+    public AutoDTO obtenerUltimoLanzamiento() {
+        return null;
+    }
+
+    public AutoDTO obtenerDetallePorId(Integer id) {
+        return null;
+    }
+
+    public AutoDTO crearAuto(AutoDTO autoDTO) {
+        return autoDTO;
+    }
+
+    public AutoDTO actualizarAuto(Integer id, AutoDTO autoDTO) {
+        return autoDTO;
+    }
+
+    public void eliminarAuto(Integer id) {
+    }
+
 
     // Getters y Setters
     // ...
@@ -149,3 +199,9 @@ public class Auto {
         this.resenias = resenias;
     }
 }
+
+ */
+
+
+
+

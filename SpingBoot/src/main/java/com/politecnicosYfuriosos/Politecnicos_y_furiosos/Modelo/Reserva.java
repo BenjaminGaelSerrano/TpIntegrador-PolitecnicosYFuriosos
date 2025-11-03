@@ -1,3 +1,4 @@
+/*
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 
 import jakarta.persistence.*;
@@ -113,3 +114,5 @@ public class Reserva {
         this.pagos = pagos;
     }
 }
+
+ */

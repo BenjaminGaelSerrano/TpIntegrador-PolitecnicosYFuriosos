@@ -1,3 +1,4 @@
+/*
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 
 import jakarta.persistence.*;
@@ -80,3 +81,5 @@ public class Pago {
         this.estado = estado;
     }
 }
+
+ */
