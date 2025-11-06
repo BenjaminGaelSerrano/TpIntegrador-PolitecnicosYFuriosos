@@ -1,4 +1,3 @@
-/*
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 
 import jakarta.persistence.*;
@@ -6,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "reserva")
 public class Reserva {
 
     @Id
@@ -34,14 +34,30 @@ public class Reserva {
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
     private List<Pago> pagos;
 
+    // Constructor vacío
+    public Reserva() {}
+
+    // Constructor con parámetros principales
+    public Reserva(Cliente cliente, Auto auto, LocalDate fechaInicio, LocalDate fechaFin,
+                   EstadoReserva estado, double total, MetodoPago metodoPago) {
+        this.cliente = cliente;
+        this.auto = auto;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.estado = estado;
+        this.total = total;
+        this.metodoPago = metodoPago;
+    }
+
     public enum EstadoReserva {
         PENDIENTE, CONFIRMADA, CANCELADA, FINALIZADA
     }
 
     public enum MetodoPago {
-        EFECTIVO, TARJETA, TRANSFERENCIA
+        EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
     }
 
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -113,6 +129,34 @@ public class Reserva {
     public void setPagos(List<Pago> pagos) {
         this.pagos = pagos;
     }
-}
 
- */
+    // Método utilitario para calcular duración en días
+    public int getDuracionEnDias() {
+        if (fechaInicio != null && fechaFin != null) {
+            return (int) java.time.temporal.ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+        }
+        return 0;
+    }
+
+    // Método para verificar si la reserva está activa
+    public boolean isActiva() {
+        return estado == EstadoReserva.CONFIRMADA &&
+                fechaInicio != null &&
+                fechaFin != null &&
+                LocalDate.now().isBefore(fechaFin);
+    }
+
+    @Override
+    public String toString() {
+        return "Reserva{" +
+                "id=" + id +
+                ", cliente=" + (cliente != null ? cliente.getId() : "null") +
+                ", auto=" + (auto != null ? auto.getId() : "null") +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFin=" + fechaFin +
+                ", estado=" + estado +
+                ", total=" + total +
+                ", metodoPago=" + metodoPago +
+                '}';
+    }
+}

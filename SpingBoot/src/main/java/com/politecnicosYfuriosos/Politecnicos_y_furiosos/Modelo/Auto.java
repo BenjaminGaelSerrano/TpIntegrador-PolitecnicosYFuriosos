@@ -1,12 +1,10 @@
-/*
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 
-
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Catalogo.AutoDTO;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "auto")
 public class Auto {
 
     @Id
@@ -16,6 +14,8 @@ public class Auto {
     private String marca;
     private String modelo;
     private int anio;
+
+    @Column(name = "precio_por_dia")
     private double precioPorDia;
 
     @Enumerated(EnumType.STRING)
@@ -30,65 +30,27 @@ public class Auto {
 
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL)
     private List<Reserva> reservas;
+    // Constructor vacío
+    public Auto() {}
 
-    @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL)
-    private List<Resenia> resenias;
-
-    public List<AutoDTO> buscarPorMarcaOModelo(String search) {
-        return List.of();
+    // Constructor con parámetros
+    public Auto(String marca, String modelo, int anio, double precioPorDia, TipoAuto tipo,
+                boolean disponible, String descripcion, String imagen1) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anio = anio;
+        this.precioPorDia = precioPorDia;
+        this.tipo = tipo;
+        this.disponible = disponible;
+        this.descripcion = descripcion;
+        this.imagen1 = imagen1;
     }
-
-    public Object getDisponible() {
-        return null;
-    }
-
-    public List<AutoDTO> filtrarPorTipoYDisponibilidad(String tipo, Boolean disponible) {
-        return List.of();
-    }
-
-    public List<AutoDTO> filtrarPorTipo(String tipo) {
-        return List.of();
-    }
-
-    public List<AutoDTO> filtrarPorDisponibilidad(Boolean disponible) {
-        return List.of();
-    }
-
-    public List<AutoDTO> obtenerTodosParaCatalogo() {
-        return List.of();
-    }
-
-    public List<AutoDTO> obtenerDestacados(int limit) {
-        return List.of();
-    }
-
-    public AutoDTO obtenerUltimoLanzamiento() {
-        return null;
-    }
-
-    public AutoDTO obtenerDetallePorId(Integer id) {
-        return null;
-    }
-
-    public AutoDTO crearAuto(AutoDTO autoDTO) {
-        return autoDTO;
-    }
-
-    public AutoDTO actualizarAuto(Integer id, AutoDTO autoDTO) {
-        return autoDTO;
-    }
-
-    public void eliminarAuto(Integer id) {
-    }
-
-
-    // Getters y Setters
-    // ...
 
     public enum TipoAuto {
         DEPORTIVO, SUV, SEDAN, CLASICO, COUPE, CONVERTIBLE
     }
 
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -168,6 +130,7 @@ public class Auto {
     public void setImagen2(String imagen2) {
         this.imagen2 = imagen2;
     }
+
     public String getImagen3() {
         return imagen3;
     }
@@ -175,6 +138,7 @@ public class Auto {
     public void setImagen3(String imagen3) {
         this.imagen3 = imagen3;
     }
+
     public String getImagen4() {
         return imagen4;
     }
@@ -191,17 +155,17 @@ public class Auto {
         this.reservas = reservas;
     }
 
-    public List<Resenia> getResenias() {
-        return resenias;
-    }
-
-    public void setResenias(List<Resenia> resenias) {
-        this.resenias = resenias;
+    // Métodos utilitarios
+    @Override
+    public String toString() {
+        return "Auto{" +
+                "id=" + id +
+                ", marca='" + marca + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", anio=" + anio +
+                ", precioPorDia=" + precioPorDia +
+                ", tipo=" + tipo +
+                ", disponible=" + disponible +
+                '}';
     }
 }
-
- */
-
-
-
-

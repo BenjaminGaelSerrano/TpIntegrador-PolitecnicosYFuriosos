@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-/*
->>>>>>> 398a586581c20925353a9b5d89a94913b2a68e8c
-=======
->>>>>>> 0d0222234f56ae6dab30c3487e06e700703edc8d
-package com.rda.concesionaria.repository;
+package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo;
 
-import com.rda.concesionaria.entity.Auto;
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Auto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,37 +22,24 @@ public interface AutoRepository extends JpaRepository<Auto, Integer> {
 
     // 🔹 Buscar por marca o modelo (para la barra de búsqueda)
     @Query("SELECT a FROM Auto a WHERE LOWER(a.marca) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(a.modelo) LIKE LOWER(CONCAT('%', :search, '%'))")
+            "OR LOWER(a.modelo) LIKE LOWER(CONCAT('%', :search, '%'))")
     List<Auto> searchByMarcaOrModelo(@Param("search") String search);
 
     // 🔹 Buscar por marca o modelo y tipo
     @Query("SELECT a FROM Auto a WHERE " +
-           "(LOWER(a.marca) LIKE LOWER(CONCAT('%', :search, '%')) " +
-           "OR LOWER(a.modelo) LIKE LOWER(CONCAT('%', :search, '%'))) " +
-           "AND a.tipo = :tipo")
+            "(LOWER(a.marca) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(a.modelo) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+            "AND a.tipo = :tipo")
     List<Auto> searchByMarcaOrModeloAndTipo(@Param("search") String search, @Param("tipo") Auto.TipoAuto tipo);
 
     // 🔹 Obtener autos destacados (por ejemplo, los más nuevos)
     @Query("SELECT a FROM Auto a ORDER BY a.anio DESC, a.id DESC")
     List<Auto> findDestacados();
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-    // 🔹 Obtener último lanzamiento (sin usar LIMIT)
-    Auto findFirstByOrderByAnioDescIdDesc(); // ✅ versión válida y eficiente
-}
-=======
-    
-    // Obtener último lanzamiento
-    @Query("SELECT a FROM Auto a ORDER BY a.anio DESC, a.id DESC LIMIT 1")
-    Auto findUltimoLanzamiento();
-}
+    // 🔹 Obtener último lanzamiento (versión correcta para Spring Data JPA)
+    @Query(value = "SELECT a FROM Auto a ORDER BY a.anio DESC, a.id DESC")
+    List<Auto> findTopByOrderByAnioDescIdDesc();
 
- */
->>>>>>> 398a586581c20925353a9b5d89a94913b2a68e8c
-=======
-
-    // 🔹 Obtener último lanzamiento (sin usar LIMIT)
-    Auto findFirstByOrderByAnioDescIdDesc(); // ✅ versión válida y eficiente
+    // 🔹 Método alternativo usando Spring Data JPA naming convention
+    Auto findFirstByOrderByAnioDescIdDesc();
 }
->>>>>>> 0d0222234f56ae6dab30c3487e06e700703edc8d

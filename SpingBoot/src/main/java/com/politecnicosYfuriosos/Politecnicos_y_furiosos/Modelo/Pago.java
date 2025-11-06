@@ -1,10 +1,10 @@
-/*
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "pago")
 public class Pago {
 
     @Id
@@ -16,7 +16,13 @@ public class Pago {
     private Reserva reserva;
 
     private double monto;
+
+    @Column(name = "fecha_pago")
     private LocalDateTime fecha;
+
+    private String descripcion;
+
+    private String numeroTransaccion;
 
     @Enumerated(EnumType.STRING)
     private Metodo metodo;
@@ -24,15 +30,27 @@ public class Pago {
     @Enumerated(EnumType.STRING)
     private EstadoPago estado;
 
+    // Constructor vacío
+    public Pago() {}
+
+    // Constructor con parámetros
+    public Pago(Reserva reserva, double monto, LocalDateTime fecha, Metodo metodo, EstadoPago estado) {
+        this.reserva = reserva;
+        this.monto = monto;
+        this.fecha = fecha;
+        this.metodo = metodo;
+        this.estado = estado;
+    }
+
     public enum Metodo {
-        EFECTIVO, TARJETA, TRANSFERENCIA
+        EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
     }
 
     public enum EstadoPago {
-        PENDIENTE, COMPLETADO, RECHAZADO
+        PENDIENTE, COMPLETADO, RECHAZADO, REEMBOLSADO
     }
 
-
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -65,6 +83,22 @@ public class Pago {
         this.fecha = fecha;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getNumeroTransaccion() {
+        return numeroTransaccion;
+    }
+
+    public void setNumeroTransaccion(String numeroTransaccion) {
+        this.numeroTransaccion = numeroTransaccion;
+    }
+
     public Metodo getMetodo() {
         return metodo;
     }
@@ -80,6 +114,29 @@ public class Pago {
     public void setEstado(EstadoPago estado) {
         this.estado = estado;
     }
-}
 
- */
+    // Métodos utilitarios
+    public boolean isCompletado() {
+        return estado == EstadoPago.COMPLETADO;
+    }
+
+    public boolean isPendiente() {
+        return estado == EstadoPago.PENDIENTE;
+    }
+
+    public boolean isRechazado() {
+        return estado == EstadoPago.RECHAZADO;
+    }
+
+    @Override
+    public String toString() {
+        return "Pago{" +
+                "id=" + id +
+                ", reserva=" + (reserva != null ? reserva.getId() : "null") +
+                ", monto=" + monto +
+                ", fecha=" + fecha +
+                ", metodo=" + metodo +
+                ", estado=" + estado +
+                '}';
+    }
+}
