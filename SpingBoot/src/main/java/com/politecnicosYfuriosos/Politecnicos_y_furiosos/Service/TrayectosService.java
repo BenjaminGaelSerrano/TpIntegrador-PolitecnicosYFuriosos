@@ -21,7 +21,7 @@ public class TrayectosService {
     public ArrayList<Trayecto_DTO> obtenerHistorialPorConductor(Integer clienteId) {
 
         // 1. Llamar al repositorio para buscar los trayectos
-        ArrayList<Trayecto> trayectos = trayectosRepository.findByReservaClienteIdOrderByFechaInicioDesc(clienteId);
+        ArrayList<Trayecto> trayectos = trayectosRepository.findTrayectosByClienteId(clienteId);
 
         // 2. Convertir la lista de Entidades a una lista de DTOs
         ArrayList<Trayecto_DTO> historialDTOs = new ArrayList<>();
