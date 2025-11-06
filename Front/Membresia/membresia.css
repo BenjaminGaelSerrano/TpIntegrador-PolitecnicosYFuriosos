@@ -281,3 +281,115 @@ a {
         gap: 10px;
     }
 }
+
+
+/* ======== NAVBAR (Estilos de Home.css) ======== */
+.navbar {
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(8px);
+  --bs-navbar-padding-y:0em
+}
+
+.nav-link {
+  color: #ccc !important;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+.navbar-collapse {
+    flex-basis: 100%;
+    flex-grow: 1;
+    align-items: center;
+    display: flex;
+    gap: 20em;
+}
+
+.nav-link:hover {
+  color: #fff !important;
+}
+
+.btn-outline-light {
+  border-radius: 30px;
+  border-color: #D4AF37;
+  color: #D4AF37;
+  transition: 0.3s;
+}
+
+.btn-outline-light:hover {
+  background-color: #D4AF37;
+  color: #000;
+}
+
+/* ======== MODAL (Estilos de Home.css) ======== */
+.modal-content {
+  background-color: #111;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.modal-header h5 {
+  font-weight: 500;
+  color: #D4AF37;
+  letter-spacing: 1px;
+}
+
+.modal-body p {
+  color: #bbb;
+}
+
+.btn-close {
+  filter: invert(1);
+}
+
+/**boton perfil (de Home.css)**/
+.btn-success{
+ --bs-btn-border-color:black !important; 
+  --bs-btn-hover-bg:#796111 !important;
+  --bs-btn-bg:#4e3d03 !important;
+  --bs-btn-hover-border-color:black !important;
+  --bs-btn-display:flex;
+  --bs-btn-active-bg: #382e0b  !important; 
+}
+
+/* Media Queries para Navbar (de Home.css) */
+@media(max-width:990px   ){
+    .navbar-collapse{
+        gap: 25em;
+    }
+}
+
+@media(max-width:728px   ){
+    .navbar-collapse{
+        gap: 20em;
+    }
+}
+
+@media(max-width:570px   ){
+    .navbar-collapse{
+        gap: 14em;
+    }
+}
+
+@media(max-width:402px){
+    .navbar-collapse{
+        gap: 8em;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto;
+        flex-direction: row;
+        margin-left: 10em;
+    }
+}
