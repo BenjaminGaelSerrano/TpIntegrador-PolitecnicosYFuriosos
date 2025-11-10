@@ -20,7 +20,7 @@ public class TrayectosController {
 
     @GetMapping("/por-conductor/{id}")
     public ResponseEntity<ArrayList<Trayecto_DTO>> obtenerSalidasPorConductor(
-            @PathVariable Integer id) {
+            @PathVariable ("id") Integer id) {
 
         ArrayList<Trayecto_DTO> historial = trayectosService.obtenerHistorialPorConductor(id);
 

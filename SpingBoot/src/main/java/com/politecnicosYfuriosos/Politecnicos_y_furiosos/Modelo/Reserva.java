@@ -44,7 +44,7 @@ public class Reserva {
     }
 
     public enum MetodoPago {
-        EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
+        EFECTIVO, TARJETA, TARJETA_DEBITO, TRANSFERENCIA
     }
 
     // Constructor vacío
