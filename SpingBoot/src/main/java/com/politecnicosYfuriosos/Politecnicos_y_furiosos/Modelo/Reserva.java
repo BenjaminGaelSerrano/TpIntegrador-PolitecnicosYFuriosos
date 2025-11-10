@@ -14,7 +14,7 @@ public class Reserva {
 
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
+    private Cliente clientePrincipal;
 
     @ManyToOne
     @JoinColumn(name = "id_auto", nullable = false)
@@ -31,23 +31,13 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
 
-    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
-    private List<Pago> pagos;
-
-    // Constructor vacío
-    public Reserva() {}
-
-    // Constructor con parámetros principales
-    public Reserva(Cliente cliente, Auto auto, LocalDate fechaInicio, LocalDate fechaFin,
-                   EstadoReserva estado, double total, MetodoPago metodoPago) {
-        this.cliente = cliente;
-        this.auto = auto;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.estado = estado;
-        this.total = total;
-        this.metodoPago = metodoPago;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "reserva_conductores",
+            joinColumns = @JoinColumn(name = "id_reserva"),
+            inverseJoinColumns = @JoinColumn(name = "id_conductor")
+    )
+    private List<Cliente> conductoresAdicionales;
 
     public enum EstadoReserva {
         PENDIENTE, CONFIRMADA, CANCELADA, FINALIZADA
@@ -57,106 +47,34 @@ public class Reserva {
         EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
     }
 
+    // Constructor vacío
+    public Reserva() {}
+
     // Getters y Setters
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Cliente getClientePrincipal() { return clientePrincipal; }
+    public void setClientePrincipal(Cliente clientePrincipal) { this.clientePrincipal = clientePrincipal; }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
+    public Auto getAuto() { return auto; }
+    public void setAuto(Auto auto) { this.auto = auto; }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+    public LocalDate getFechaInicio() { return fechaInicio; }
+    public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
 
-    public Auto getAuto() {
-        return auto;
-    }
+    public LocalDate getFechaFin() { return fechaFin; }
+    public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
 
-    public void setAuto(Auto auto) {
-        this.auto = auto;
-    }
+    public EstadoReserva getEstado() { return estado; }
+    public void setEstado(EstadoReserva estado) { this.estado = estado; }
 
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
+    public double getTotal() { return total; }
+    public void setTotal(double total) { this.total = total; }
 
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
+    public MetodoPago getMetodoPago() { return metodoPago; }
+    public void setMetodoPago(MetodoPago metodoPago) { this.metodoPago = metodoPago; }
 
-    public LocalDate getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(LocalDate fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public EstadoReserva getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoReserva estado) {
-        this.estado = estado;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public MetodoPago getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(MetodoPago metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
-    public List<Pago> getPagos() {
-        return pagos;
-    }
-
-    public void setPagos(List<Pago> pagos) {
-        this.pagos = pagos;
-    }
-
-    // Método utilitario para calcular duración en días
-    public int getDuracionEnDias() {
-        if (fechaInicio != null && fechaFin != null) {
-            return (int) java.time.temporal.ChronoUnit.DAYS.between(fechaInicio, fechaFin);
-        }
-        return 0;
-    }
-
-    // Método para verificar si la reserva está activa
-    public boolean isActiva() {
-        return estado == EstadoReserva.CONFIRMADA &&
-                fechaInicio != null &&
-                fechaFin != null &&
-                LocalDate.now().isBefore(fechaFin);
-    }
-
-    @Override
-    public String toString() {
-        return "Reserva{" +
-                "id=" + id +
-                ", cliente=" + (cliente != null ? cliente.getId() : "null") +
-                ", auto=" + (auto != null ? auto.getId() : "null") +
-                ", fechaInicio=" + fechaInicio +
-                ", fechaFin=" + fechaFin +
-                ", estado=" + estado +
-                ", total=" + total +
-                ", metodoPago=" + metodoPago +
-                '}';
-    }
+    public List<Cliente> getConductoresAdicionales() { return conductoresAdicionales; }
+    public void setConductoresAdicionales(List<Cliente> conductoresAdicionales) { this.conductoresAdicionales = conductoresAdicionales; }
 }

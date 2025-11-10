@@ -13,149 +13,75 @@ public class Auto {
 
     private String marca;
     private String modelo;
-    private int anio;
-
-    @Column(name = "precio_por_dia")
-    private double precioPorDia;
+    private Integer anio;
+    private Double precioPorDia;
 
     @Enumerated(EnumType.STRING)
     private TipoAuto tipo;
 
-    private boolean disponible;
+    private Boolean disponible;
     private String descripcion;
     private String imagen1;
     private String imagen2;
     private String imagen3;
     private String imagen4;
 
-    @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "auto")
     private List<Reserva> reservas;
-    // Constructor vacío
-    public Auto() {}
 
-    // Constructor con parámetros
-    public Auto(String marca, String modelo, int anio, double precioPorDia, TipoAuto tipo,
-                boolean disponible, String descripcion, String imagen1) {
-        this.marca = marca;
-        this.modelo = modelo;
-        this.anio = anio;
-        this.precioPorDia = precioPorDia;
-        this.tipo = tipo;
-        this.disponible = disponible;
-        this.descripcion = descripcion;
-        this.imagen1 = imagen1;
-    }
+    @OneToMany(mappedBy = "auto")
+    private List<Resenia> resenias;
 
     public enum TipoAuto {
         DEPORTIVO, SUV, SEDAN, CLASICO, COUPE, CONVERTIBLE
     }
 
+    // Constructor vacío
+    public Auto() {}
+
     // Getters y Setters
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
 
-    public String getMarca() {
-        return marca;
-    }
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
+    public Integer getAnio() { return anio; }
+    public void setAnio(Integer anio) { this.anio = anio; }
 
-    public String getModelo() {
-        return modelo;
-    }
+    public Double getPrecioPorDia() { return precioPorDia; }
+    public void setPrecioPorDia(Double precioPorDia) { this.precioPorDia = precioPorDia; }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
+    public TipoAuto getTipo() { return tipo; }
+    public void setTipo(TipoAuto tipo) { this.tipo = tipo; }
 
-    public int getAnio() {
-        return anio;
-    }
+    public Boolean isDisponible() { return disponible; }
+    public void setDisponible(Boolean disponible) { this.disponible = disponible; }
 
-    public void setAnio(int anio) {
-        this.anio = anio;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public double getPrecioPorDia() {
-        return precioPorDia;
-    }
+    public String getImagen1() { return imagen1; }
+    public void setImagen1(String imagen1) { this.imagen1 = imagen1; }
 
-    public void setPrecioPorDia(double precioPorDia) {
-        this.precioPorDia = precioPorDia;
-    }
+    public String getImagen2() { return imagen2; }
+    public void setImagen2(String imagen2) { this.imagen2 = imagen2; }
 
-    public TipoAuto getTipo() {
-        return tipo;
-    }
+    public String getImagen3() { return imagen3; }
+    public void setImagen3(String imagen3) { this.imagen3 = imagen3; }
 
-    public void setTipo(TipoAuto tipo) {
-        this.tipo = tipo;
-    }
+    public String getImagen4() { return imagen4; }
+    public void setImagen4(String imagen4) { this.imagen4 = imagen4; }
 
-    public boolean isDisponible() {
-        return disponible;
-    }
+    public List<Reserva> getReservas() { return reservas; }
+    public void setReservas(List<Reserva> reservas) { this.reservas = reservas; }
 
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
-    }
+    public List<Resenia> getResenias() { return resenias; }
+    public void setResenias(List<Resenia> resenias) { this.resenias = resenias; }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getImagen1() {
-        return imagen1;
-    }
-
-    public void setImagen1(String imagen1) {
-        this.imagen1 = imagen1;
-    }
-
-    public String getImagen2() {
-        return imagen2;
-    }
-
-    public void setImagen2(String imagen2) {
-        this.imagen2 = imagen2;
-    }
-
-    public String getImagen3() {
-        return imagen3;
-    }
-
-    public void setImagen3(String imagen3) {
-        this.imagen3 = imagen3;
-    }
-
-    public String getImagen4() {
-        return imagen4;
-    }
-
-    public void setImagen4(String imagen4) {
-        this.imagen4 = imagen4;
-    }
-
-    public List<Reserva> getReservas() {
-        return reservas;
-    }
-
-    public void setReservas(List<Reserva> reservas) {
-        this.reservas = reservas;
-    }
-
-    // Métodos utilitarios
     @Override
     public String toString() {
         return "Auto{" +
