@@ -43,7 +43,7 @@ public class Pago {
     }
 
     public enum Metodo {
-        EFECTIVO, TARJETA_CREDITO, TARJETA_DEBITO, TRANSFERENCIA
+        EFECTIVO, TARJETA, TARJETA_DEBITO, TRANSFERENCIA
     }
 
     public enum EstadoPago {
