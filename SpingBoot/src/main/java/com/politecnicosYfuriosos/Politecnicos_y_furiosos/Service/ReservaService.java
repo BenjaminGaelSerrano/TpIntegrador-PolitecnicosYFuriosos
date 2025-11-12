@@ -1,139 +1,171 @@
+package com.rda.concesionaria.service;
 
-package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Service;
-// ReservaService.java
-
-
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Garage.EspacioReservaDTO;
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Garage.ReservaRequestDTO;
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Garage.ReservaResponseDTO;
+import com.rda.concesionaria.dto.ReservaRequestDTO;
+import com.rda.concesionaria.dto.ReservaResponseDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.*;
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo.AutoRepository;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo.ClienteRepository;
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.garaje.LugarRepository;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.garaje.ReservaGarajeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Transactional
 public class ReservaService {
 
     @Autowired
-    private ReservaGarajeRepository reservaRepository;
+    private ReservaRepository reservaRepository;
 
     @Autowired
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private LugarRepository lugarRepository;
+    private AutoRepository autoRepository;
 
-    public ReservaResponseDTO crearReserva(ReservaRequestDTO request, Integer clienteId) {
-        Optional<Cliente> clienteOpt = clienteRepository.findById(clienteId);
-        if (clienteOpt.isEmpty()) {
-            return new ReservaResponseDTO(false, "Cliente no encontrado", null, 0.0, null, new ArrayList<>());
+    private static final int MINIMO_CONDUCTORES = 1;
+
+    public ReservaResponseDTO registrarReserva(ReservaRequestDTO request) {
+        // 1. Validar datos básicos
+        validarDatosBasicos(request);
+
+        // 2. Obtener entidades
+        Cliente clientePrincipal = clienteRepository.findById(request.getIdClientePrincipal())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        Auto auto = autoRepository.findById(request.getIdAuto())
+                .orElseThrow(() -> new RuntimeException("Auto no encontrado"));
+
+        // 3. Validar disponibilidad del auto
+        validarDisponibilidadAuto(auto, request.getFechaInicio(), request.getFechaFin(), clientePrincipal.isVip());
+
+        // 4. Validar conductores
+        List<Cliente> conductoresAdicionales = validarConductores(request.getIdsConductoresAdicionales(), auto);
+
+        // 5. Calcular total
+        double total = calcularTotal(auto, request.getFechaInicio(), request.getFechaFin());
+
+        // 6. Crear y guardar reserva
+        Reserva reserva = crearReserva(clientePrincipal, auto, request, conductoresAdicionales, total);
+        Reserva reservaGuardada = reservaRepository.save(reserva);
+
+        return crearResponseDTO(reservaGuardada, "Reserva registrada exitosamente");
+    }
+
+    private void validarDatosBasicos(ReservaRequestDTO request) {
+        if (request.getFechaInicio() == null || request.getFechaFin() == null) {
+            throw new RuntimeException("Las fechas de inicio y fin son obligatorias");
+        }
+        if (request.getFechaInicio().isBefore(LocalDate.now())) {
+            throw new RuntimeException("La fecha de inicio no puede ser en el pasado");
+        }
+        if (request.getFechaFin().isBefore(request.getFechaInicio())) {
+            throw new RuntimeException("La fecha de fin debe ser posterior a la fecha de inicio");
+        }
+    }
+
+    private void validarDisponibilidadAuto(Auto auto, LocalDate fechaInicio, LocalDate fechaFin, boolean esVip) {
+        // Verificar si el auto está disponible
+        if (!auto.isDisponible()) {
+            throw new RuntimeException("El auto no está disponible para reserva");
         }
 
-        Cliente cliente = clienteOpt.get();
-        List<EspacioReservaDTO> espaciosReserva = new ArrayList<>();
-        double total = 0.0;
+        // Buscar reservas superpuestas
+        List<Reserva> reservasSuperpuestas = reservaRepository.findReservasSuperpuestas(auto.getId(), fechaInicio, fechaFin);
 
-        // Verificar y procesar cada espacio
-        for (Integer espacioId : request.getEspaciosIds()) {
-            Optional<Lugar> lugarOpt = lugarRepository.findById(espacioId);
-            if (lugarOpt.isEmpty()) {
-                return new ReservaResponseDTO(false, "Espacio no encontrado: " + espacioId, null, 0.0, null, new ArrayList<>());
+        if (!reservasSuperpuestas.isEmpty()) {
+            // Si hay reservas VIP superpuestas, no se puede reservar
+            List<Reserva> reservasVip = reservaRepository.findReservasVipSuperpuestas(auto.getId(), fechaInicio, fechaFin);
+
+            if (!reservasVip.isEmpty()) {
+                throw new RuntimeException("No hay disponibilidad. Existen reservas VIP en las fechas seleccionadas");
             }
 
-            Lugar lugar = lugarOpt.get();
-
-            // Verificar disponibilidad
-            if (!verificarDisponibilidad(lugar)) {
-                return new ReservaResponseDTO(false, "El espacio " + lugar.getNumeroLugar() + " no está disponible", null, 0.0, null, new ArrayList<>());
+            // Si el cliente actual es VIP, tiene prioridad sobre reservas no VIP
+            if (esVip) {
+                // Cancelar reservas no VIP superpuestas
+                for (Reserva reserva : reservasSuperpuestas) {
+                    if (!reserva.getClientePrincipal().isVip()) {
+                        reserva.setEstado(Reserva.EstadoReserva.CANCELADA);
+                        reservaRepository.save(reserva);
+                    }
+                }
+            } else {
+                throw new RuntimeException("No hay disponibilidad en las fechas seleccionadas");
             }
-
-            // Calcular precio según duración
-            double precio = calcularPrecio(lugar, request.getDuracion());
-            total += precio;
-
-            // Crear DTO para respuesta
-            EspacioReservaDTO espacioDTO = new EspacioReservaDTO();
-            espacioDTO.setId(lugar.getId());
-            espacioDTO.setNumero(lugar.getNumeroLugar());
-            espacioDTO.setTipo(lugar.getTipo().name());
-            espacioDTO.setPiso(lugar.getPiso());
-            espacioDTO.setPrecio(precio);
-            espaciosReserva.add(espacioDTO);
-
-            // Crear reserva individual para cada espacio
-            ReservaGaraje reserva = new ReservaGaraje();
-            reserva.setCliente(cliente);
-            reserva.setLugar(lugar);
-            reserva.setFechaReserva(LocalDateTime.now());
-
-            // Configurar fechas según duración
-            configurarFechasReserva(reserva, request);
-            reserva.setEstado(ReservaGaraje.EstadoReserva.pendiente);
-
-            reservaRepository.save(reserva);
-
-            // Marcar espacio como reservado
-            lugar.setEstado(Lugar.EstadoLugar.reservado);
-            lugarRepository.save(lugar);
         }
-
-        return new ReservaResponseDTO(true, "Reserva creada exitosamente",
-                null, total, LocalDateTime.now(), espaciosReserva);
     }
 
-    private boolean verificarDisponibilidad(Lugar lugar) {
-        return lugar.getEstado() == Lugar.EstadoLugar.disponible;
-    }
+    private List<Cliente> validarConductores(List<Integer> idsConductores, Auto auto) {
+        List<Cliente> conductores = new ArrayList<>();
 
-    private double calcularPrecio(Lugar lugar, String duracion) {
-        double precioBase = lugar.getPrecio() != null ? lugar.getPrecio().doubleValue() : getPrecioDefault(lugar.getTipo());
+        if (idsConductores != null) {
+            for (Integer idConductor : idsConductores) {
+                Cliente conductor = clienteRepository.findById(idConductor)
+                        .orElseThrow(() -> new RuntimeException("Conductor no encontrado: " + idConductor));
 
-        if (duracion.endsWith("h")) {
-            switch (duracion) {
-                case "1h": return precioBase * 0.008;
-                case "6h": return precioBase * 0.04;
-                case "12h": return precioBase * 0.08;
-                default: return precioBase * 0.008;
+                // Validar que el conductor esté habilitado
+                if (!conductor.isHabilitado()) {
+                    throw new RuntimeException("El conductor " + conductor.getNombre() + " no está habilitado");
+                }
+
+                // Validar categoría de licencia para autos especiales
+                if (auto.getTipo() == Auto.TipoAuto.DEPORTIVO &&
+                        conductor.getCategoriaLicencia() == Cliente.CategoriaLicencia.B) {
+                    throw new RuntimeException("El conductor " + conductor.getNombre() +
+                            " no tiene la categoría necesaria para este auto deportivo");
+                }
+
+                conductores.add(conductor);
             }
-        } else {
-            int meses = Integer.parseInt(duracion);
-            return precioBase * meses;
         }
+
+        // Validar cantidad mínima de conductores
+        if (conductores.size() + 1 < MINIMO_CONDUCTORES) {
+            throw new RuntimeException("Se requiere al menos " + MINIMO_CONDUCTORES + " conductor(es)");
+        }
+
+        return conductores;
     }
 
-    private double getPrecioDefault(Lugar.TipoLugar tipo) {
-        switch (tipo) {
-            case auto: return 1200.0;
-            case premium: return 2500.0;
-            case moto: return 800.0;
-            default: return 1000.0;
-        }
+    private double calcularTotal(Auto auto, LocalDate fechaInicio, LocalDate fechaFin) {
+        long dias = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+        if (dias < 1) dias = 1; // Mínimo 1 día
+
+        return auto.getPrecioPorDia() * dias;
     }
 
-    private void configurarFechasReserva(ReservaGaraje reserva, ReservaRequestDTO request) {
-        LocalDateTime fechaInicio = request.getFechaInicio().atStartOfDay();
+    private Reserva crearReserva(Cliente clientePrincipal, Auto auto, ReservaRequestDTO request,
+                                 List<Cliente> conductoresAdicionales, double total) {
+        Reserva reserva = new Reserva();
+        reserva.setClientePrincipal(clientePrincipal);
+        reserva.setAuto(auto);
+        reserva.setFechaInicio(request.getFechaInicio());
+        reserva.setFechaFin(request.getFechaFin());
+        reserva.setTotal(total);
+        reserva.setEstado(Reserva.EstadoReserva.CONFIRMADA);
+        reserva.setMetodoPago(Reserva.MetodoPago.valueOf(request.getMetodoPago()));
+        reserva.setConductoresAdicionales(conductoresAdicionales);
 
-        if (request.getHoraInicio() != null) {
-            fechaInicio = LocalDateTime.of(request.getFechaInicio(), request.getHoraInicio());
-        }
+        return reserva;
+    }
 
-        reserva.setFechaInicio(fechaInicio);
+    private ReservaResponseDTO crearResponseDTO(Reserva reserva, String mensaje) {
+        ReservaResponseDTO response = new ReservaResponseDTO();
+        response.setId(reserva.getId());
+        response.setClientePrincipal(reserva.getClientePrincipal().getNombre() + " " +
+                reserva.getClientePrincipal().getApellido());
+        response.setAuto(reserva.getAuto().getMarca() + " " + reserva.getAuto().getModelo());
+        response.setFechaInicio(reserva.getFechaInicio());
+        response.setFechaFin(reserva.getFechaFin());
+        response.setEstado(reserva.getEstado().name());
+        response.setTotal(reserva.getTotal());
+        response.setMensaje(mensaje);
 
-        if (request.getDuracion().endsWith("h")) {
-            int horas = Integer.parseInt(request.getDuracion().replace("h", ""));
-            reserva.setFechaFin(fechaInicio.plusHours(horas));
-            reserva.setDuracion(horas);
-        } else {
-            int meses = Integer.parseInt(request.getDuracion());
-            reserva.setFechaFin(fechaInicio.plusMonths(meses));
-            reserva.setDuracion(meses * 30 * 24);
-        }
+        return response;
     }
 }
