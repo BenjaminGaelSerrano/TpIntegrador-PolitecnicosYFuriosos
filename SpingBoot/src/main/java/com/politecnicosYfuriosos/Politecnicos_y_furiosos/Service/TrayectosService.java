@@ -8,6 +8,7 @@ import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Trayecto.Tra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +33,28 @@ public class TrayectosService {
         return historialDTOs;
     }
 
+    public int obtenerHistorialPorFechas(Integer clienteId, LocalDate desde, LocalDate hasta) {
+        // Validar fechas
+        if (desde.isAfter(hasta)) {
+            throw new IllegalArgumentException("La fecha desde no puede ser posterior a la fecha hasta");
+        }
+
+        ArrayList<Trayecto> trayectos = trayectosRepository.findTrayectosByClienteIdAndFechas(clienteId, desde, hasta);
+        return cant_trayectos(trayectos);
+    }
+
     /**
-     * Método privado (helper) para hacer la conversión de Entidad a DTO
+     Metodo para hacer la conversión de Entidad a DTO
      */
+
+    private int cant_trayectos(ArrayList<Trayecto> trayectos) {
+        ArrayList<Trayecto_DTO> historialDTOs = new ArrayList<>();
+        for (Trayecto trayecto : trayectos) {
+            historialDTOs.add(convertirEntidadADTO(trayecto));
+        }
+        return historialDTOs.size();
+    }
+
     private Trayecto_DTO convertirEntidadADTO(Trayecto trayecto) {
 
         // Obtenemos los objetos relacionados
