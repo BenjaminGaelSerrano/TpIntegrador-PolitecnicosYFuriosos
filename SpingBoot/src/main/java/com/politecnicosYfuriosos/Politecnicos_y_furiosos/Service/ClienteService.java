@@ -1,5 +1,6 @@
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Service;
 
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Perfil.ClientePerfilDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Cliente;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,9 @@ public class ClienteService {
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
         cliente.setHabilitado(habilitado);
         return clienteRepository.save(cliente);
+    }
+
+    public ClientePerfilDTO obtenerPerfil(Integer id) {
+        return null;
     }
 }

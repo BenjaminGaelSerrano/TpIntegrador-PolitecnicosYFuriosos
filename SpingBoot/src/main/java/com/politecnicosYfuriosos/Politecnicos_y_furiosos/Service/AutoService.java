@@ -1,6 +1,6 @@
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Service;
 
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Catalogo.*;
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Catalogo.AutoDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Auto;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Catalogo.AutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,8 @@ public class AutoService {
     public AutoService(AutoRepository autoRepository) {
         this.autoRepository = autoRepository;
     }
+
+    // ❌ ELIMINADO: Constructor duplicado - Lombok @RequiredArgsConstructor lo genera automáticamente
 
     public List<AutoDTO> obtenerTodosParaCatalogo() {
         return autoRepository.findAll()

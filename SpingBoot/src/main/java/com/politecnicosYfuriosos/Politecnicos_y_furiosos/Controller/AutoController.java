@@ -20,7 +20,6 @@ public class AutoController {
     public AutoController(AutoService autoService) {
         this.autoService = autoService;
     }
-
     @GetMapping("/catalogo")
     public ResponseEntity<List<AutoDTO>> obtenerCatalogo(
             @RequestParam(required = false) String tipo,
