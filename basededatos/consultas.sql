@@ -29,5 +29,22 @@ begin
 end//
 
 delimiter ;
+#e. Evento que, cada mes, elimine a los conductores que hace más de 6 meses que no 
+#registran entradas y salidas.
+
+delimiter //
+
+create event eliminar_conductores_inactivos 
+on schedule every 1 month
+starts current_timestamp
+do
+begin
+    delete from cliente 
+    where id in (select id_cliente from (
+	select cliente.id as id_cliente, max(reserva.fecha_inicio) as ultima_reserva from cliente left join
+    reserva on cliente.id = reserva.id_cliente group by cliente.id having  ultima_reserva < date_sub(current_date(), interval 6 month)) as sub);
+end//
+
+delimiter ;
 
 
