@@ -29,6 +29,19 @@ begin
 end//
 
 delimiter ;
+
+#D, Procedimiento que devuelve la cantidad de reservas que tuvo cada modelo en un rango d fechas
+delimiter //
+create procedure cantidad_reservas_entre_fechas (in f_menor date, in f_mayor date)
+begin
+
+select auto.modelo, count(*)  from reserva join auto on id_auto=auto.id where fecha_inicio<=f_mayor and fecha_fin >= f_menor group by auto.modelo;
+
+end//
+delimiter ; 	
+
+
+
 #e. Evento que, cada mes, elimine a los conductores que hace más de 6 meses que no 
 #registran entradas y salidas.
 
