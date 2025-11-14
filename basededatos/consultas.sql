@@ -1,3 +1,26 @@
+#A. Trigger que, al ingresarse una salida, se deben verificar que se cumplan todas las condiciones requeridas para ese modelo de auto
+ delimiter //
+create trigger verificar_condicion_para_modelo before insert on trayecto
+for each row
+begin
+	declare cantidad_conductores int;
+	declare membresia_cliente int;
+	declare membresia_auto int;
+    select cliente.membresia, auto.membresia, auto.minimoConductores into membresia_cliente, membresia_auto, cantidad_conductores from reserva join cliente on reserva.id_cliente =cliente.id join auto on auto.id=reserva.id_auto where reserva.id=new.id_reserva;
+    
+    if membresia_auto>membresia_cliente then
+		signal sqlstate '45000'
+		set message_text="Error: La membresía del cliente no es suficiente para este modelo de auto1";
+    end if;
+     if new.cant_conductores<cantidad_conductores then
+		signal sqlstate '45000'
+		set message_text="Error: La cantidad de conductores es menor a la requerida";
+    end if;
+    
+end//
+delimiter ; 	
+
+
 #c. Procedimiento que, dado un auto y una fecha, determine si el auto estará disponible o no.
 delimiter //
 
