@@ -21,6 +21,16 @@ end//
 delimiter ; 	
 
 
+#B Trigger que, al ingresarse un auto en aleras cambie el esatdo d las reservas activAs de ese auto 
+delimiter //
+create trigger cancelar_reserva_si_alerta after insert on alerta for each row
+begin
+
+update reserva set estado="EN ALERTA" where reserva.id = new.reserva_id;
+
+end//
+delimiter ;
+
 #c. Procedimiento que, dado un auto y una fecha, determine si el auto estará disponible o no.
 delimiter //
 
