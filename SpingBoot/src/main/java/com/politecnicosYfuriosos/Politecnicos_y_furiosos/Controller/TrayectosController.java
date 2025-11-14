@@ -1,5 +1,6 @@
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Controller;
 
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Catalogo.AlertaSinRetornoDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Trayecto.Trayecto_DTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Service.TrayectosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,18 @@ public class TrayectosController {
 
     @Autowired
     private TrayectosService trayectosService;
+    // ELIMINAR ESTA LINEA: private TrayectosService salidaService;
 
+    @GetMapping("/alertas-sin-retorno")
+    public ResponseEntity<List<AlertaSinRetornoDTO>> obtenerAlertasSinRetorno() {
+        try {
+            List<AlertaSinRetornoDTO> alertas = trayectosService.obtenerTrayectosSinRetorno24Horas();
+            return ResponseEntity.ok(alertas);
+        } catch (Exception e) {
+            e.printStackTrace(); // Agregar esto para ver el error
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
     @GetMapping("/por-conductor/{id}")
     public ResponseEntity<ArrayList<Trayecto_DTO>> obtenerSalidasPorConductor(

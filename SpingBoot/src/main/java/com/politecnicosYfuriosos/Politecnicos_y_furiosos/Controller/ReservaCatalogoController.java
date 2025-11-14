@@ -18,7 +18,7 @@ public class ReservaCatalogoController {
     @Autowired
     private ReservaCatalogoService reservaCatalogoService;
 
-    @PostMapping
+    @PostMapping("/crearReserva")
     public ResponseEntity<ReservaRespDTO> crearReserva(@RequestBody ReservaReqDTO request) {
         try {
             ReservaRespDTO response = reservaCatalogoService.registrarReserva(request);

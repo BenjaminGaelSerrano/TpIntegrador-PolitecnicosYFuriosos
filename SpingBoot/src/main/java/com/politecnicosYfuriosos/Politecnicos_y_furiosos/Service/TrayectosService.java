@@ -1,10 +1,11 @@
 package com.politecnicosYfuriosos.Politecnicos_y_furiosos.Service;
 
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Catalogo.AlertaSinRetornoDTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Dto.Trayecto.Trayecto_DTO;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Auto;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Reserva;
 import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Modelo.Trayecto;
-import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.Trayecto.TrayectosRepository;
+import com.politecnicosYfuriosos.Politecnicos_y_furiosos.Repository.TrayectosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class TrayectosService {
     public ArrayList<Trayecto_DTO> obtenerHistorialPorConductor(Integer clienteId) {
 
         // 1. Llamar al repositorio para buscar los trayectos
-        ArrayList<Trayecto> trayectos = trayectosRepository.findTrayectosByClienteId(clienteId);
+        ArrayList<Trayecto> trayectos = (ArrayList<Trayecto>) trayectosRepository.findTrayectosByClienteId(clienteId);
 
         // 2. Convertir la lista de Entidades a una lista de DTOs
         ArrayList<Trayecto_DTO> historialDTOs = new ArrayList<>();
@@ -39,7 +40,7 @@ public class TrayectosService {
             throw new IllegalArgumentException("La fecha desde no puede ser posterior a la fecha hasta");
         }
 
-        ArrayList<Trayecto> trayectos = trayectosRepository.findTrayectosByClienteIdAndFechas(clienteId, desde, hasta);
+        ArrayList<Trayecto> trayectos = (ArrayList<Trayecto>) trayectosRepository.findTrayectosByClienteIdAndFechas(clienteId, desde, hasta);
         return cant_trayectos(trayectos);
     }
 
@@ -72,5 +73,8 @@ public class TrayectosService {
         dto.setAutoUtilizado(auto.getMarca() + " " + auto.getModelo());
 
         return dto;
+    }
+    public List<AlertaSinRetornoDTO> obtenerTrayectosSinRetorno24Horas() {
+        return trayectosRepository.findTrayectosSinRetorno24Horas();
     }
 }
