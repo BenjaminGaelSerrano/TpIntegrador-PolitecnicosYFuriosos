@@ -61,3 +61,11 @@ end//
 delimiter ;
 
 
+#F Evento que consulte autos que salieron, pero no han vuelto en 24 horas y los registre en una tabla alertas.
+delimiter //
+create event no_han_vuelto_en_24hs on schedule every 1 day starts now() do
+begin
+	insert into alerta (idreserva,estado) select reserva.id, "no se localiza hace mas de 24hs" from reserva where reserva.estado="CONFIRMADA" and current_date()> date_add(reserva.fecha_fin, interval 1 day) and reserva.id not in (select idreserva from alerta) and reserva.id in (select trayacto.id_reserva from trayecto);
+end//
+delimiter ;
+
